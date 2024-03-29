@@ -1,0 +1,45 @@
+---
+- name: Initializing Kubernetes cluster
+  hosts: kubernetes-master-nodes
+  become: true
+  become_user: root
+  vars_files:
+  - env_variables 
+  
+  tasks:
+  - name: Pulling images required for setting up a Kubernetes cluster
+    shell: kubeadm config images pull    
+    
+  - name: Running init command
+    shell: kubeadm init --pod-network-cidr=192.168.0.0/16
+    register: output    
+
+  - name: Creating Joining token
+    shell: kubeadm token create --print-join-command
+    register: output  
+
+  - name: Storing Logs and Generated token for future purpose.
+    local_action: copy content={{ output.stdout }} dest={{ token_file }}    
+
+  - name: Copying required files
+    shell: |
+     mkdir -p $HOME/.kube
+     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+  - name: Download calicoctl
+    get_url:
+      url: "https://github.com/projectcalico/calico/releases/download/v3.25.0/calicoctl-linux-amd64"
+      dest: "/usr/local/bin/calicoctl"
+      mode: '0755'    
+
+  - name: Add calicoctl to PATH
+    lineinfile:
+      path: ~/.bashrc
+      line: 'export PATH=$PATH:/usr/local/bin'
+    become_user: ec2-user
+    register: path_changed    
+
+  - name: Source .bashrc to apply changes
+    shell: source ~/.bashrc
+    

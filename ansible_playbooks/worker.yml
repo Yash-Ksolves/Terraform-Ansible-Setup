@@ -1,0 +1,23 @@
+---
+- name: Joining worker nodes to cluster
+  hosts: kubernetes-worker-nodes
+  become: true
+  become_user: root
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Copying token to worker nodes
+    copy: src={{ token_file }} dest=join_token
+
+  - name: Joining worker nodes with kubernetes master
+    shell: "`grep -i 'kubeadm join' join_token`"
+
+- name: Installing calico
+  hosts: kubernetes-master-nodes
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Install calico pod network
+      shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml

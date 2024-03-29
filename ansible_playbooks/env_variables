@@ -1,0 +1,9 @@
+packages:
+- kubeadm
+- kubectl
+
+services:
+- kubelet
+- containerd
+
+token_file: join_token
