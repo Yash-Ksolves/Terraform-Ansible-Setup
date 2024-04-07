@@ -12,8 +12,8 @@ This guide will help you set up a Kubernetes cluster using Terraform and Ansible
 1. **Clone Git Repo:**
 
     ```bash
-    git clone https://github.com/Yash-Ksolves/kkube-task.git
-    cd kkube-task
+    git clone https://github.com/Yash-Ksolves/terraform-ansible-setup.git
+    cd terraform-ansible-setup
     ```
 
 2. **Terraform Setup:**
