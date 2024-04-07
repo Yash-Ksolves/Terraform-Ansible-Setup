@@ -4,7 +4,7 @@ This guide will help you set up a Kubernetes cluster using Terraform and Ansible
 ## Prerequisites
 
 -  AWS account with access-key
-- `Yash-kube.pem` key pair for SSH access, you can find it in `redhat` folder.
+-  Update `Yash-kube.pem` key pair for SSH access, you can find it in `redhat` folder.
 -  Please make sure to update AWS credential keys in `create_instance.tf` file.
 
 ## Steps
